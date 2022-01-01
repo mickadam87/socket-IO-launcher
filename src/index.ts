@@ -2,14 +2,15 @@ import { Server as http } from "http";
 import JWT from "jsonwebtoken";
 import { Server as websocket } from "socket.io";
 
-let port: number = parseInt(process.env.SOCKET_PORT) || 3000;
+let listeningPort: number = parseInt(process.env.SOCKET_PORT) || 3000;
 
 export default function launchSocketIO(server: http) {
   const socket = new websocket({});
 
   new Promise((resolve) => {
-    socket.listen(server || port, {});
-    resolve(server || port);
+    socket.listen(server || listeningPort, {});
+    const { port } = server.address() as any;
+    resolve(port || listeningPort);
   }).then((value) => {
     console.log(
       ">>>>> SocketI0 is waiting for you on port " + value + " <<<<<"
